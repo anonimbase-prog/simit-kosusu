@@ -23,11 +23,45 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
+      - name: Yapılandırma dosyalarını oluştur
+        run: |
+          cat > package.json <<'JSON'
+          {
+            "name": "simit-kosusu",
+            "version": "1.0.0",
+            "private": true,
+            "dependencies": {
+              "@capacitor/android": "^6.2.0",
+              "@capacitor/core": "^6.2.0",
+              "@capacitor/ios": "^6.2.0"
+            },
+            "devDependencies": {
+              "@capacitor/assets": "^3.0.5",
+              "@capacitor/cli": "^6.2.0"
+            }
+          }
+          JSON
+          cat > capacitor.config.json <<'JSON'
+          {
+            "appId": "com.simitkosusu.oyun",
+            "appName": "Simit Koşusu",
+            "webDir": "www",
+            "server": { "androidScheme": "https" },
+            "android": { "backgroundColor": "#F59A3C" },
+            "ios": { "backgroundColor": "#F59A3C", "contentInset": "never" }
+          }
+          JSON
+          ls -la
       - name: Web dosyalarını hazırla
         run: |
           mkdir -p www
-          cp index.html www/index.html
-          cp -r assets www/assets
+          HTML=$(ls *.html 2>/dev/null | head -n 1)
+          if [ -z "$HTML" ]; then echo "HATA: depoda index.html bulunamadı"; exit 1; fi
+          cp "$HTML" www/index.html
+          mkdir -p www/assets
+          cp -r assets/. www/assets/ 2>/dev/null || true
+          mkdir -p assets
+          ls -la www www/assets
       - run: npm install
       - run: npx cap add android
       - name: İkon ve açılış ekranı
@@ -62,11 +96,45 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+      - name: Yapılandırma dosyalarını oluştur
+        run: |
+          cat > package.json <<'JSON'
+          {
+            "name": "simit-kosusu",
+            "version": "1.0.0",
+            "private": true,
+            "dependencies": {
+              "@capacitor/android": "^6.2.0",
+              "@capacitor/core": "^6.2.0",
+              "@capacitor/ios": "^6.2.0"
+            },
+            "devDependencies": {
+              "@capacitor/assets": "^3.0.5",
+              "@capacitor/cli": "^6.2.0"
+            }
+          }
+          JSON
+          cat > capacitor.config.json <<'JSON'
+          {
+            "appId": "com.simitkosusu.oyun",
+            "appName": "Simit Koşusu",
+            "webDir": "www",
+            "server": { "androidScheme": "https" },
+            "android": { "backgroundColor": "#F59A3C" },
+            "ios": { "backgroundColor": "#F59A3C", "contentInset": "never" }
+          }
+          JSON
+          ls -la
       - name: Web dosyalarını hazırla
         run: |
           mkdir -p www
-          cp index.html www/index.html
-          cp -r assets www/assets
+          HTML=$(ls *.html 2>/dev/null | head -n 1)
+          if [ -z "$HTML" ]; then echo "HATA: depoda index.html bulunamadı"; exit 1; fi
+          cp "$HTML" www/index.html
+          mkdir -p www/assets
+          cp -r assets/. www/assets/ 2>/dev/null || true
+          mkdir -p assets
+          ls -la www www/assets
       - run: npm install
       - run: npx cap add ios
       - name: İkon ve açılış ekranı
@@ -105,9 +173,10 @@ jobs:
       - uses: actions/checkout@v4
       - name: Siteyi hazırla
         run: |
-          mkdir -p site
-          cp index.html site/index.html
-          cp -r assets site/assets
+          mkdir -p site/assets
+          HTML=$(ls *.html 2>/dev/null | head -n 1)
+          cp "$HTML" site/index.html
+          cp -r assets/. site/assets/ 2>/dev/null || true
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
