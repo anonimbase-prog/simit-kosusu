@@ -71,7 +71,9 @@ jobs:
       - name: Ekranı dikey kilitle
         run: |
           M=android/app/src/main/AndroidManifest.xml
-          sed -i -e 's/<activity$/<activity android:screenOrientation="portrait"/' -e 's/<activity /<activity android:screenOrientation="portrait" /' "$M"
+          if ! grep -q "screenOrientation" "$M"; then
+            sed -i '0,/<activity/s//<activity android:screenOrientation="portrait"/' "$M"
+          fi
           grep -n "screenOrientation" "$M" || echo "uyarı: dikey kilit eklenemedi"
       - name: APK derle
         run: |
