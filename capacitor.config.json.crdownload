@@ -1,0 +1,8 @@
+{
+  "appId": "com.simitkosusu.oyun",
+  "appName": "Simit Koşusu",
+  "webDir": "www",
+  "server": { "androidScheme": "https" },
+  "android": { "backgroundColor": "#F59A3C" },
+  "ios": { "backgroundColor": "#F59A3C", "contentInset": "never" }
+}
